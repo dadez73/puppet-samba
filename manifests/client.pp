@@ -20,12 +20,19 @@ class samba::client (
   Stdlib::Ensure::Package $package_ensure = $samba::package_ensure,
 ) {
   if $package_manage {
-    package { $packages[client]:
-      ensure => $package_ensure,
+    $samba::packages[client].each |String $package_name| {
+      unless defined(Package[$package_name]) {
+        package { $package_name:
+          ensure => $package_ensure,
+        }
+      }
     }
-
-    package { $packages[utils]:
-      ensure => $package_ensure,
+    $samba::packages[utils].each |String $package_name| {
+      unless defined(Package[$package_name]) {
+        package { $package_name:
+          ensure => $package_ensure,
+        }
+      }
     }
   }
 }
